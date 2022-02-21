@@ -1,7 +1,7 @@
 - name: Provision all OpenStack instances
   hosts: localhost
   connection: local
-  gather_facts: no
+  # gather_facts: no
   # become: no
   vars:
     clouds:
@@ -18,6 +18,9 @@
     - name: Env VARS
       debug:
         msg: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+    - name: Print facts
+      debug:
+        var: ansible_facts
     - name: Print some debug information 
       vars: 
         msg: |
