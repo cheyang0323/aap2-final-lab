@@ -23,7 +23,7 @@
     - include_vars: "{{ config_file }}"
     - name: Print configuration file
       debug:
-        msg: "{{ clouds }}"
+        msg: "{{ clouds.devstack.auth.auth_url }} --- {{ clouds.devstack.auth.username }}"
     - name: Print some debug information 
       vars: 
         msg: |
