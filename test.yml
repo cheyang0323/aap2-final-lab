@@ -1,9 +1,10 @@
 - name: Provision all OpenStack instances
   hosts: localhost
   connection: local
-  # gather_facts: no
+  gather_facts: no
   # become: no
   vars:
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
     clouds:
       devstack:
         auth_url: "{{lookup('env', 'OS_AUTH_URL')}}"
@@ -19,9 +20,10 @@
     - name: Env VARS
       debug:
         msg: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
-    - name: Print facts
+    - include_vars: "{{ config_file }}"
+    - name: Print configuration file
       debug:
-        var: ansible_facts
+        msg: "{{ config_file }}"
     - name: Print some debug information 
       vars: 
         msg: |
