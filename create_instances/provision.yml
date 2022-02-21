@@ -5,9 +5,13 @@
   gather_facts: false
   vars:
     guid: "{{ lookup('env','GUID') }}"
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
   tasks:
     - name: Include Instance variables
       include_vars: instances_vars.yml
+    
+    - name: Inlcude Openstack variables
+      include_vars: "{{ config_file }}"
 
     - name: Create Instance
       openstack.cloud.server:
