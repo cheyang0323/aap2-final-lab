@@ -1,0 +1,24 @@
+---
+- name: Install HAproxy
+  yum:
+    name: "{{ __package }}"
+    state: installed
+  loop: "{{ haproxy_packages }}"
+  loop_control:
+    loop_var: __package
+
+- name: Copy HAproxy template
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - restart_haproxy
+
+- name: Start HAproxy
+  service:
+    name: "{{ __service }}"
+    state: started
+    enabled: yes
+  loop: "{{ haproxy_services }}"
+  loop_control:
+    loop_var: __service

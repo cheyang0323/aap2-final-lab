@@ -1,0 +1,43 @@
+---
+- name: Install apache server
+  yum:
+    name: "{{ __package }}"
+    state: installed
+  loop: "{{ apache_packages }}"
+  loop_control:
+    loop_var: __package
+
+- name: Change apache port
+  replace:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Listen.*$'
+    replace: 'Listen 8080'
+
+- name: Copy image directory
+  copy:
+    src: images
+    dest: /var/www/html/
+
+- name: Copy php program template
+  template:
+    src: index.php.j2
+    dest: /var/www/html/index.php
+  notify:
+    - restart_apache
+
+- name: Start apache server
+  service:
+    name: "{{ __service }}"
+    state: restarted
+  loop: "{{ apache_services }}"
+  loop_control:
+    loop_var: __service
+
+- name: enable selinux boolean
+  seboolean:
+    name: "{{ item }}"
+    state: yes
+    persistent: yes
+  loop:
+    - httpd_can_network_connect_db
+    - httpd_can_network_connect

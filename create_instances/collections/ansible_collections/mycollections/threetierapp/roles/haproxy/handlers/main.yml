@@ -1,0 +1,8 @@
+---
+- name: restart_haproxy
+  service:
+    name: "{{ __service }}"
+    state: restarted
+  loop: "{{ haproxy_services }}"
+  loop_control:
+    loop_var: __service

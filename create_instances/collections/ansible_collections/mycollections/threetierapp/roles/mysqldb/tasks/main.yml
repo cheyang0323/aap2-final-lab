@@ -1,0 +1,36 @@
+---
+- name: Install mysql
+  yum:
+    name: "{{ __package }}"
+    state: installed
+  loop: "{{ mysql_packages }}"
+  loop_control:
+    loop_var: __package
+
+- name: Start mysql
+  service:
+    name: "{{ __service }}"
+    enabled: true
+    state: started
+  loop: "{{ mysql_services }}"
+  loop_control:
+    loop_var: __service
+
+- name: Set user's privileges
+  mysql_user:
+    name: "{{ mysql_info.user }}"
+    priv: "{{ mysql_info.privilege }}"
+    append_privs: yes
+    password: "{{ mysql_info.password }}"
+    host: '%'
+
+- name: Copy database backup
+  copy:
+    src: "{{ mysql_info.backupfile }}"
+    dest: /tmp
+
+- name: Restore database from backup
+  mysql_db:
+    name: "{{  mysql_info.database }}"
+    state: import
+    target: "/tmp/{{ mysql_info.backupfile }}"
