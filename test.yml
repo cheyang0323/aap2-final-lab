@@ -1,0 +1,15 @@
+- name: Provision all OpenStack instances
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  become: no
+  vars:
+    auth_url: "{{lookup('env', 'OS_AUTH_URL')}}"
+    username: "{{lookup('env', 'OS_USERNAME')}}"
+    password: "{{lookup('env', 'OS_PASSWORD')}}"
+    project_name: "{{lookup('env', 'OS_PROJECT_NAME')}}"
+
+  tasks:
+    - name: launch an instance
+      debug:
+        msg: "{{ auth_url }} - {{ username }} - {{ password }} - {{ project_name }}"
