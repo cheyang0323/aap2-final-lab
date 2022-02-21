@@ -26,7 +26,7 @@
           # password: "{{ clouds.devstack.auth.password }}"
           # project_name: "{{ clouds.devstack.auth.project_name }}"
         # cloud: "{{ guid }}-project"
-        cloud: "{{ clouds.devstack.auth.project_name }}"
+        cloud: devstack
         name: "{{ instance.name }}"
         image: "{{ instance.image }}"
         key_name: "{{ instance.keypair }}"
