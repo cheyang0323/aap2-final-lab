@@ -23,7 +23,7 @@
     - include_vars: "{{ config_file }}"
     - name: Print configuration file
       debug:
-        msg: "{{ ansible_facts }}"
+        msg: "{{ clouds }}"
     - name: Print some debug information 
       vars: 
         msg: |
