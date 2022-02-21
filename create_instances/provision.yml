@@ -13,6 +13,9 @@
     - name: Inlcude Openstack variables
       include_vars: "{{ config_file }}"
 
+    - name: Print openstack vars
+      msg: "{{ clouds.devstack.auth.auth_url }} -- {{ clouds.devstack.auth.username }} -- {{ clouds.devstack.auth.project_name }}"
+
     - name: Create Instance
       openstack.cloud.server:
         auth:
