@@ -3,6 +3,7 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  no_log: False
   vars:
     guid: "{{ lookup('env','GUID') }}"
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
