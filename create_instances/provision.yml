@@ -19,14 +19,14 @@
         msg: "{{ clouds.devstack.auth.auth_url }} -- {{ clouds.devstack.auth.username }} -- {{ clouds.devstack.auth.project_name }}"
 
     - name: Create Instance
+      no_log: False
       openstack.cloud.server:
-        # auth:
-          # auth_url: "{{ clouds.devstack.auth.auth_url }}"
-          # username: "{{ clouds.devstack.auth.username }}"
-          # password: "{{ clouds.devstack.auth.password }}"
-          # project_name: "{{ clouds.devstack.auth.project_name }}"
-        # cloud: "{{ guid }}-project"
-        cloud: devstack
+        auth:
+          auth_url: "{{ clouds.devstack.auth.auth_url }}"
+          username: "{{ clouds.devstack.auth.username }}"
+          password: "{{ clouds.devstack.auth.password }}"
+          project_name: "{{ clouds.devstack.auth.project_name }}"
+        cloud: "{{ guid }}-project"
         name: "{{ instance.name }}"
         image: "{{ instance.image }}"
         key_name: "{{ instance.keypair }}"
