@@ -1,0 +1,4 @@
+---
+
+- name: Create 4 VM Servers
+  import_playbook: mycollections.ospinstances.config

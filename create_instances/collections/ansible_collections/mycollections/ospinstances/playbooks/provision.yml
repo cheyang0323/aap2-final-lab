@@ -1,0 +1,92 @@
+---
+- name: Create OpenStack Instances
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    guid: "{{ lookup('env','GUID') }}"
+  tasks:
+    - name: Include Instance variables
+      include_vars: instances_vars.yml
+
+    - name: Create Instance
+      openstack.cloud.server:
+        cloud: "{{ guid }}-project"
+        name: "{{ instance.name }}"
+        image: "{{ instance.image }}"
+        key_name: "{{ instance.keypair }}"
+        flavor: "{{ instance.flavor }}"
+        security_groups: "{{ instance.security_group }}"
+        auto_ip: no
+        wait: yes
+        nics:
+          - net-name: "{{ instance.internal_network }}"
+        meta: "AnsibleGroup={{instance.metadata.AnsibleGroup}},type={{instance.metadata.type}}"
+        state: present
+      loop: "{{ instances }}"
+      loop_control:
+        loop_var: instance
+
+    - name: Collection instance info
+      openstack.cloud.server_info:
+        cloud: "{{ guid }}-project"
+      register: os_jobs
+  
+    - name: Populate instance inventory
+      add_host:
+        host: "{{ os_job.name }}"
+        group: "osp_servers"
+        ansible_host: "{{ os_job.private_v4 }}"
+        ansible_user: cloud-user
+        ansible_ssh_private_key_file: "/home/runner/.ssh/{{ guid }}key.pem"
+      ignore_errors: yes
+      when: os_job.metadata.type == "osp_instances"
+      loop: "{{ os_jobs.openstack_servers }}"
+      loop_control:
+        loop_var: os_job
+      # loop: "{{ os_jobs.results | flatten(levels=1) }}"
+      # when: servers.changed | bool
+
+    - name: Print servers
+      debug:
+        msg: "osp_server ==> {{ osp_server.name }}"
+      ignore_errors: yes
+      when: osp_server.metadata.type == "osp_instances"
+      loop: "{{ os_jobs.openstack_servers }}"
+      loop_control:
+        loop_var: osp_server
+
+    # - name: Populate instance inventory 2
+      # add_host:
+        # host: bastion.example.com
+        # group: "lab_server"
+
+# - name: Update DNS server
+  # hosts: bastion.example.com
+  # hosts: lab_server
+  # gather_facts: false
+  # become: yes
+  # become_user: devops
+  # tasks:
+    # - name: execute lab command
+      # ansible.builtin.shell: /usr/local/bin/lab reconfigure -p bind9
+      # ansible.builtin.command: /usr/local/bin/lab reconfigure -p bind9
+      # ansible.builtin.command:
+        # argv:
+          # - /usr/local/bin/lab
+          # - reconfigure
+          # - -p
+          # - bind9
+        # cmd: lab reconfigure -p bind9
+
+- name: Check new servers
+  hosts: osp_servers
+  gather_facts: false
+  tasks:
+    - name: wait for host to be available
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+        connect_timeout: 10
+                           
+
