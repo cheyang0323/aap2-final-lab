@@ -20,12 +20,12 @@
 
     - name: Create Instance
       openstack.cloud.server:
-        # auth:
-          # auth_url: "{{ clouds.devstack.auth.auth_url }}"
-          # username: "{{ clouds.devstack.auth.username }}"
-          # password: "{{ clouds.devstack.auth.password }}"
-          # project_name: "{{ clouds.devstack.auth.project_name }}"
-        cloud: "{{ guid }}-project"
+        auth:
+          auth_url: "{{ clouds.devstack.auth.auth_url }}"
+          username: "{{ clouds.devstack.auth.username }}"
+          password: "{{ clouds.devstack.auth.password }}"
+          project_name: "{{ clouds.devstack.auth.project_name }}"
+        # cloud: "{{ guid }}-project"
         cloud: "{{ clouds.devstack.auth.project_name }}"
         name: "{{ instance.name }}"
         image: "{{ instance.image }}"
