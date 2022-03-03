@@ -24,37 +24,37 @@
   become: yes
   roles:
     - name: Install and configure firewall
-      role: mycollections.threetierapp.firewall
+      role: mycollections.ospinstances.firewall
       vars:
         firewall_services:
           - mysql   
     - name: database deployment
-      role: mycollections.threetierapp.mysqldb
+      role: mycollections.ospinstances.mysqldb
 
 - name: Deploy haproxy
   hosts: loadbalancers
   become: yes
   roles:
     - name: Install and configure firewall
-      role: mycollections.threetierapp.firewall
+      role: mycollections.ospinstances.firewall
       vars:
         firewall_services:
           - http
         firewall_tcp_ports:
           - 5000
     - name: frontend deployment
-      role: mycollections.threetierapp.haproxy
+      role: mycollections.ospinstances.haproxy
 
 - name: Deploy apache
   hosts: backend_servers
   become: yes
   roles:
     - name: Install and configure firewall
-      role: mycollections.threetierapp.firewall
+      role: mycollections.ospinstances.firewall
       vars:
         firewall_services:
           - http
         firewall_tcp_ports:
           - 8080
     - name: application deployment
-      role: mycollections.threetierapp.apache
+      role: mycollections.ospinstances.apache
